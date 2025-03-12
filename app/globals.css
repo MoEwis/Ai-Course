@@ -9,6 +9,13 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
+/* @font-face {
+  font-family: "Inter";
+  src: url("./fonts/Inter-Regular.woff2") format("woff2"),
+    url("./fonts/Inter-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+} */
 
 @layer base {
   :root {
@@ -74,8 +81,6 @@ body {
     @apply bg-background text-foreground;
   }
 }
-
-
 
 @layer base {
   * {
