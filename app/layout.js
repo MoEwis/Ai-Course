@@ -19,7 +19,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider frontendApi="pk_test_YWNjZXB0ZWQtZGFuZS01Mi5jbGVyay5hY2NvdW50cy5kZXYk">
+    <ClerkProvider frontendApi={process.env.CLERK_SECRET_KEY}>
       <html lang="en">
         <head>
           <meta charSet="UTF-8" />
