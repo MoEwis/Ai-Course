@@ -6,6 +6,7 @@ import { db } from "/configs/db.jsx";
 import { CourseList, Chapters } from "/configs/schema.jsx";
 import { eq } from "drizzle-orm";
 import { MdDeleteOutline } from "react-icons/md";
+import { IoBookOutline } from "react-icons/io5";
 
 function UserCourseList() {
   const { user, isLoaded } = useUser();
@@ -14,6 +15,21 @@ function UserCourseList() {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [courseChapters, setCourseChapters] = useState([]);
   const [isLoadingCourse, setIsLoadingCourse] = useState(false);
+  const [currentDateTime, setCurrentDateTime] = useState(new Date());
+
+  // Update time every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentDateTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // Format date and time
+  const formatDateTime = (date) => {
+    return date.toISOString().slice(0, 19).replace("T", " ");
+  };
 
   useEffect(() => {
     if (isLoaded && user) {
@@ -40,13 +56,11 @@ function UserCourseList() {
     try {
       setIsLoadingCourse(true);
 
-      // جلب تفاصيل الكورس والشابترز
       const [courseDetails, chaptersResult] = await Promise.all([
         db.select().from(CourseList).where(eq(CourseList.courseId, courseId)),
         db.select().from(Chapters).where(eq(Chapters.courseId, courseId)),
       ]);
 
-      // تحويل بيانات الشابترز
       const formattedChapters = chaptersResult.map((chapter) => {
         try {
           const content =
@@ -72,9 +86,6 @@ function UserCourseList() {
       setSelectedCourse(courseDetails[0]);
       setCourseChapters(formattedChapters);
       router.push(`/create-course/${courseId}/start`);
-
-      console.log("Course Details:", courseDetails[0]);
-      console.log("Chapters:", formattedChapters);
     } catch (error) {
       console.error("Error loading course details:", error);
     } finally {
@@ -96,21 +107,36 @@ function UserCourseList() {
 
   if (!isLoaded) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+        <div className="relative">
+          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+          <div className="mt-4 text-blue-600 font-medium">Loading...</div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Header */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+      {/* Header Section */}
+      <div className="bg-white border-b border-gray-100 shadow-sm py-6">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-center">
+            {/* Left side - Title and Time */}
+            <div className="space-y-1">
+              <h1 className="text-2xl font-bold text-gray-900">Your Courses</h1>
+            </div>
+
+            {/* Right side - Create Button */}
+          </div>
+        </div>
+      </div>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
         {isLoadingCourse ? (
           <div className="flex items-center justify-center min-h-[200px]">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
           </div>
         ) : courses.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -120,25 +146,25 @@ function UserCourseList() {
                 onClick={() => handleCourseClick(course.courseId)}
                 className="group cursor-pointer transform transition-all duration-300 hover:-translate-y-2"
               >
-                <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl">
+                <div className="bg-white rounded-xl shadow-sm hover:shadow-xl border border-gray-100 overflow-hidden">
                   {/* Course Banner */}
-                  <div className="h-48 bg-gradient-to-r from-blue-500 to-indigo-600 relative">
+                  <div className="h-48 bg-gradient-to-r from-blue-500 to-indigo-600 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-black/5"></div>
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-4xl text-white font-bold opacity-20 group-hover:opacity-30 transition-opacity">
-                        {course.name?.charAt(0)}
-                      </span>
+                      <IoBookOutline className="text-6xl text-white opacity-20 group-hover:opacity-30 transition-opacity transform group-hover:scale-110 duration-300" />
                     </div>
                   </div>
 
                   {/* Course Content */}
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">
+                      <span className="px-3 py-1 bg-blue-50 text-blue-600 text-xs font-semibold rounded-full">
                         {course.category || "Course"}
                       </span>
                       <button
                         onClick={(e) => handleDeleteCourse(course.courseId, e)}
-                        className="flex items-center gap-2 px-3 py-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors duration-200"
+                        className="flex items-center gap-2 px-3 py-1 text-red-600 hover:text-red-700 
+                                 hover:bg-red-50 rounded-full transition-colors duration-200"
                       >
                         <MdDeleteOutline className="text-xl" />
                         <span className="text-sm font-medium">Delete</span>
@@ -150,18 +176,16 @@ function UserCourseList() {
                     </h2>
 
                     <p className="text-gray-600 mb-4 line-clamp-2">
-                      {course.courseOutput.description ||
+                      {course.courseOutput?.description ||
                         "No description available"}
                     </p>
 
-                    {/* Progress Bar */}
-
                     {/* Metadata */}
-                    <div className="border-t pt-4 mt-4">
+                    <div className="border-t border-gray-100 pt-4 mt-4">
                       <div className="flex items-center justify-between text-sm text-gray-500">
                         <div className="flex items-center space-x-2">
                           <svg
-                            className="w-4 h-4"
+                            className="w-4 h-4 text-blue-500"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -173,7 +197,9 @@ function UserCourseList() {
                               d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                             />
                           </svg>
-                          <span> updated: {course.userName}</span>
+                          <span className="font-medium text-gray-600">
+                            Last updated by: {course.userName}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -184,23 +210,13 @@ function UserCourseList() {
           </div>
         ) : (
           <div className="text-center py-16">
-            <div className="bg-white rounded-xl shadow-lg p-8 max-w-lg mx-auto">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 max-w-lg mx-auto">
               <div className="mb-4">
-                <svg
-                  className="mx-auto h-12 w-12 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                  />
-                </svg>
+                <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto">
+                  <IoBookOutline className="text-3xl text-blue-600" />
+                </div>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
                 No Courses Yet
               </h3>
               <p className="text-gray-600 mb-6">
@@ -208,7 +224,12 @@ function UserCourseList() {
               </p>
               <button
                 onClick={() => router.push("/create-course")}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="inline-flex items-center px-6 py-3 rounded-lg
+                         bg-gradient-to-r from-blue-600 to-indigo-600 
+                         hover:from-blue-700 hover:to-indigo-700
+                         text-white font-medium text-sm
+                         transition-all duration-200 transform hover:scale-105
+                         shadow-lg shadow-blue-500/25"
               >
                 Create New Course
               </button>
