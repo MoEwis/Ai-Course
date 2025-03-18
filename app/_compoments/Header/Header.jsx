@@ -54,7 +54,7 @@ function Header() {
               <div className="space-y-8">
                 <div className="space-y-4">
                   <span className="inline-block px-4 py-1.5 bg-blue-50 text-blue-600 text-sm font-semibold rounded-full border border-blue-100">
-                    AI-Powered Learning Platform
+                    AI Course Generator
                   </span>
 
                   <h1 className="text-4xl lg:text-6xl font-bold text-gray-900">
@@ -80,14 +80,6 @@ function Header() {
                   >
                     <a href="/Dashboard"> Get Started Now </a>
                   </Button>
-                  <Button
-                    className="px-8 py-3 bg-white text-gray-700 rounded-lg
-                                   border border-gray-200 hover:border-blue-500
-                                   shadow-lg shadow-gray-200/25 transform hover:scale-105
-                                   transition-all duration-200"
-                  >
-                    Learn More
-                  </Button>
                 </div>
 
                 {/* Stats */}
@@ -106,7 +98,7 @@ function Header() {
               <div className="relative lg:block">
                 <div className="relative z-10 ">
                   <Image
-                    src="/image/Education.png" // Make sure to add your hero image
+                    src="/image/ai.png" // Make sure to add your hero image
                     alt="AI Learning Platform"
                     width={600}
                     height={600}

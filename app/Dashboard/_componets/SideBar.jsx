@@ -28,7 +28,7 @@ function SideBar() {
     },
     {
       id: 3,
-      name: "PlatformEthics",
+      name: " Guidelines",
       icon: <IoShieldCheckmarkOutline />,
       path: "/Dashboard/PlatformEthics",
     },
