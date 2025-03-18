@@ -52,7 +52,7 @@ function FinishScreen({ params }) {
   };
 
   const handleCopyUrl = async () => {
-    const urlToCopy = `${process.env.NEXT_PUBLIC_HOST_NAME}course/view/${course?.courseId}`;
+    const urlToCopy = `${process.env.NEXT_PUBLIC_HOST_NAME}/create-course/${course?.courseId}/start`;
     try {
       await navigator.clipboard.writeText(urlToCopy);
       setCopied(true);
