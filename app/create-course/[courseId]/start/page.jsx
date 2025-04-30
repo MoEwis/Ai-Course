@@ -373,6 +373,7 @@ function CourseStart({ params }) {
             eq(Chapters.courseId, course.courseId)
           )
         );
+      console.log("mm", result);
       if (result.length > 0) {
         setChapterContent(result[0]);
       } else {
@@ -385,7 +386,7 @@ function CourseStart({ params }) {
       setLoading(false);
     }
   };
-
+  console.log("chapter Content", chapterContent);
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50">
@@ -498,6 +499,7 @@ function CourseStart({ params }) {
               <ChapterContent
                 chapter={selectedChapter}
                 content={chapterContent?.content}
+                videoId={chapterContent?.videoID}
               />
             ) : (
               <div className="text-center py-12">

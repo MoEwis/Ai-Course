@@ -1,114 +1,4 @@
-// import React from "react";
-// import YouTube from "react-youtube";
-// import AddQuizzes from "./AddQuizzes";
-
-// const opts = {
-//   height: "390",
-//   width: "640",
-//   playerVars: {
-//     // https://developers.google.com/youtube/player_parameters
-//     autoplay: 0,
-//   },
-// };
-
-// function ChapterContent({ chapter, content }) {
-//   // Handle case of no content
-//   if (!content) {
-//     return <p className="text-gray-600 text-center">Loading content...</p>;
-//   }
-
-//   // Function to handle video ready state
-//   const onReady = (event) => {
-//     console.log("YouTube Player is ready:", event.target);
-//   };
-
-//   // Function to handle video errors
-//   const onError = (event) => {
-//     console.error("YouTube Player error:", event.data);
-//   };
-
-//   return (
-//     <div className="p-10 bg-white shadow-md rounded-lg">
-//       {/* Content Title */}
-//       <h2 className="text-3xl font-bold text-gray-800 mb-4">
-//         {content?.Title || chapter?.chapterName || "Untitled"}
-//       </h2>
-//       <p className="text-gray-700 mb-6">
-//         {content?.description || chapter?.about || "No description available"}
-//       </p>
-
-//       {/* Video if available */}
-//       {content?.videoId ? (
-//         <div className="mb-6">
-//           <YouTube
-//             videoId={content?.videoId}
-//             opts={opts}
-//             onReady={onReady}
-//             onError={onError}
-//             className="youtube-video rounded-lg shadow-lg" // Added class for styling control
-//           />
-//         </div>
-//       ) : (
-//         <p className="text-gray-500 text-center mb-6">
-//           No video available for this chapter
-//         </p>
-//       )}
-
-//       {/* Chapter List */}
-//       <div className="mt-6">
-//         {content?.chapters?.length > 0 ? (
-//           content.chapters.map((chapterItem, chapterIndex) => (
-//             <div
-//               key={chapterIndex}
-//               className="mb-8 border-b pb-4 border-gray-300"
-//             >
-//               {/* Chapter Title */}
-//               <h3 className="text-2xl font-semibold text-gray-800">
-//                 {chapterItem.chapter_title}
-//               </h3>
-//               <p className="text-gray-600">{chapterItem.description}</p>
-
-//               {/* Elements List */}
-//               {chapterItem.elements?.length > 0 && (
-//                 <div className="mt-4 space-y-4">
-//                   {chapterItem.elements.map((element, elementIndex) => (
-//                     <div
-//                       key={elementIndex}
-//                       className="mr-4 p-4 bg-gray-100 rounded-lg shadow-sm"
-//                     >
-//                       <h4 className="text-xl font-medium text-gray-800">
-//                         {element.element_title}
-//                       </h4>
-//                       <p className="text-gray-600">{element.description}</p>
-
-//                       {/* Code Example if available */}
-//                       {element.code_example && (
-//                         <pre className="bg-gray-900 text-white p-3 rounded mt-2 overflow-auto">
-//                           <code
-//                             dangerouslySetInnerHTML={{
-//                               __html: element.code_example,
-//                             }}
-//                           />
-//                         </pre>
-//                       )}
-//                     </div>
-//                   ))}
-//                 </div>
-//               )}
-//             </div>
-//           ))
-//         ) : (
-//           <p className="text-gray-500">No chapters available</p>
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default ChapterContent;
-
 import React from "react";
-import YouTube, { YouTubePlayer } from "react-youtube";
 import { FaCode, FaBook } from "react-icons/fa";
 
 const opts = {
@@ -118,7 +8,7 @@ const opts = {
     autoplay: 0,
   },
 };
-function ChapterContent({ chapter, content }) {
+function ChapterContent({ chapter, content, videoId }) {
   if (!content) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -130,6 +20,7 @@ function ChapterContent({ chapter, content }) {
     );
   }
 
+  console.log(content);
   return (
     <div className="max-w-5xl mx-auto">
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -146,16 +37,18 @@ function ChapterContent({ chapter, content }) {
         </div>
 
         {/* Video Section */}
+
         <div className="relative aspect-video">
           <iframe
             className="w-full h-full"
-            src={`https://www.youtube.com/embed/${content.videoId}`}
+            src={`https://www.youtube.com/embed/${videoId}`}
             title="YouTube video player"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           ></iframe>
         </div>
+
         {/* <YouTube videoId={content?.videoId} opts={opts} /> */}
         {/* Content Section */}
         <div className="p-8">
