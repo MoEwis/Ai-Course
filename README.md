@@ -18,7 +18,6 @@ This project includes a rich ecosystem of powerful tools:
 - 🔐 **Clerk** – Authentication and user management
 - 🧱 **Radix UI** – Accessible UI components
 - 🎬 **Framer Motion** – Animations and transitions
-- ☁️ **Firebase** – Realtime backend and services
 - 🔗 **Axios** – HTTP client
 - 🔥 **React Hot Toast** – Notifications
 - 🧩 **Lucide Icons** – Beautiful open-source icons
